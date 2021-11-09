@@ -29,13 +29,13 @@ public:
       {
         for (unsigned int j = 0; j < vector1.size(); j++)
         {
-          if (vectorAll.at(i) != vector1.at(j))
+          if (vectorAll.at(i) == vector1.at(j))
           {
-            combined.push_back(vectorAll.at(i));
+            vectorAll.erase(vectorAll.begin() + i);
           }
         }
       }
-      
+      combined = vectorAll;
     }
 
     virtual ~Select_Not(){ 

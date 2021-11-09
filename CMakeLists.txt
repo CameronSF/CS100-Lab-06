@@ -1,13 +1,12 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.9)
 
 SET(CMAKE_CXX_STANDARD 11)
 
 ADD_SUBDIRECTORY(googletest)
 
-add_compile_option(-g -O0 -fno-inline)
 
 ADD_EXECUTABLE(spreadsheet main.cpp spreadsheet.cpp)
-ADD_EXECUTABLE(test test.cpp)
+ADD_EXECUTABLE(test test.cpp spreadsheet.cpp)
 
 TARGET_LINK_LIBRARIES(test gtest)
 TARGET_COMPILE_DEFINITIONS(test PRIVATE gtest_disable_pthreads=ON)

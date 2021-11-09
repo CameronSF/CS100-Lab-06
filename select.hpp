@@ -5,6 +5,12 @@
 
 class Select
 {
+protected:
+    Select* choice1 = nullptr;
+    Select* choice2 = nullptr;
+    Select* parentPtr = nullptr;
+    int sheet_size = 0;
+
 public:
     virtual ~Select() = default;
 

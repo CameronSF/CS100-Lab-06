@@ -24,9 +24,10 @@ TEST(TestSelect_Contains, TestingContains)
   sheet.set_selection(new Select_Contains(&sheet, "Username", "Joke"));
   sheet.print_selection(s);
   EXPECT_EQ("TheJoker Twisted Fate 21 \nJokesOnYou Jinx 30 \n", s.str());
+  std::stringstream z;
   sheet.set_selection(new Select_Contains(&sheet, "Level", "21"));
-  sheet.print_selection(s);
-  EXPECT_EQ("TheJoker Twisted Fate 21 \nMindlessMachine Blitzcrank 21 \n", s.str());
+  sheet.print_selection(z);
+  EXPECT_EQ("TheJoker Twisted Fate 21 \nMindlessMachine Blitzcrank 21 \n", z.str());
 }
 
 TEST(TestSelect_Contains, TestingEmpty)
@@ -60,7 +61,7 @@ TEST(TestSelect_Contains, TestingNoColumn)
   std::stringstream s;
   sheet.set_selection(new Select_Contains(&sheet, "Age", "21"));
   sheet.print_selection(s);
-  EXPECT_EQ("\n", s.str());
+  EXPECT_EQ("", s.str());
 }
 
 TEST(TestSelect_Contains, TestingMultipleColumns)
@@ -158,13 +159,15 @@ TEST(TestSelect_And, TestingAndOr)
   sheet.add_row({"Shaxx", "Titan", "Arc"});
   sheet.add_row({"Osiris", "Warlock", "Solar"});
   std::stringstream s;
-  sheet.set_selection(new Select_And(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Or(new Select_Contains(&sheet, "First_name", "Ikora"), new Select_Contains(&sheet, "First_name", "Zavala")));
+  sheet.set_selection(new Select_And(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Or(new Select_Contains(&sheet, "First_name", "Ikora"), new Select_Contains(&sheet, "First_name", "Zavala"))));
   sheet.print_selection(s);
   EXPECT_EQ("Ikora Warlock Void \n", s.str());
 } 
 
 TEST(TestSelect_And, TestingAndSelect)
 {
+  Spreadsheet sheet;
+
   sheet.set_column_names({"First_name", "Class", "Element"});
   sheet.add_row({"Zavala","Titan","Arc"});
   sheet.add_row({"Cayde", "Hunter", "Solar"});
@@ -172,7 +175,7 @@ TEST(TestSelect_And, TestingAndSelect)
   sheet.add_row({"Shaxx", "Titan", "Arc"});
   sheet.add_row({"Osiris", "Warlock", "Solar"});
 
-  Select* test = new Select_And(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar")));
+  Select* test = new Select_And(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar"));
 
   vector<int> test_vector = {4};
   EXPECT_EQ(test_vector, test->select());
@@ -207,7 +210,7 @@ TEST(TestSelect_Not, TestingNotSelect)
   sheet.add_row({"JokesOnYou","Jinx","30"});
   sheet.add_row({"MindlessMachine","Blitzcrank","21"});
 
-  Select* test = new Select_Not(new Select_Contains(&sheet, "Champion", "Teemo")));
+  Select* test = new Select_Not(new Select_Contains(&sheet, "Champion", "Teemo"));
   vector<int> test_vector = {1,2,3,4};
   EXPECT_EQ(test_vector, test->select());
 }
@@ -225,7 +228,7 @@ TEST(TestSelect_Or, TestingOr)
   sheet.add_row({"Osiris", "Warlock", "Solar"});
 
   std::stringstream s;
-  sheet.set_selection(new Select_Or(new Select_Contains(&sheet, "Class", "Titan"), new Select_Contains(&sheet, "First_name", "Ikora"));
+  sheet.set_selection(new Select_Or(new Select_Contains(&sheet, "Class", "Titan"), new Select_Contains(&sheet, "First_name", "Ikora")));
   sheet.print_selection(s);
   EXPECT_EQ("Zavala Titan Arc \nIkora Warlock Void \nShaxx Titan Arc \n", s.str());
 } 
@@ -240,7 +243,7 @@ TEST(TestSelect_Not_And, TestNotAnd)
   sheet.add_row({"TheJoker","Twisted Fate","21"});
   sheet.add_row({"JokesOnYou","Jinx","30"});
   sheet.add_row({"MindlessMachine","Blitzcrank","21"});
-  sheet.add_row({"MindYourBussiness", "Blitzcrnank", "21"});
+  sheet.add_row({"MindYourBussiness", "Blitzcrank", "21"});
 
   std::stringstream s;
   sheet.set_selection(new Select_Not(new Select_And(new Select_Contains(&sheet, "Username", "Mind"), new Select_Contains(&sheet, "Champion", "Blitzcrank"))));
@@ -259,13 +262,15 @@ TEST(TestSelect_Not_Or, TestNotOr)
   sheet.add_row({"Shaxx", "Titan", "Arc"});
   sheet.add_row({"Osiris", "Warlock", "Solar"});
   std::stringstream s;
-  sheet.set_selection(new Select_Not(new Select_Or(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar")));
+  sheet.set_selection(new Select_Not(new Select_Or(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar"))));
   sheet.print_selection(s);
   EXPECT_EQ("Zavala Titan Arc \nShaxx Titan Arc \n", s.str());
 }
 
 TEST(TestSelect_Or, TestingOrSelect)
 {
+  Spreadsheet sheet;  
+	
   sheet.set_column_names({"First_name", "Class", "Element"});
   sheet.add_row({"Zavala","Titan","Arc"});
   sheet.add_row({"Cayde", "Hunter", "Solar"});
@@ -273,7 +278,7 @@ TEST(TestSelect_Or, TestingOrSelect)
   sheet.add_row({"Shaxx", "Titan", "Arc"});
   sheet.add_row({"Osiris", "Warlock", "Solar"});
 
-  Select* test = new Select_Or(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar")));
+  Select* test = new Select_Or(new Select_Contains(&sheet, "Class", "Warlock"), new Select_Contains(&sheet, "Element", "Solar"));
 
   vector<int> test_vector = {1, 2, 4};
   EXPECT_EQ(test_vector, test->select());
@@ -290,10 +295,9 @@ TEST(TestSelect_And_Not_Or, TestAndNotOr)
   sheet.add_row({"Ikora", "Warlock", "Void"});
   sheet.add_row({"Shaxx", "Titan", "Arc"});
   sheet.add_row({"Osiris", "Warlock", "Solar"});
-  sheet.add_row({})
   
   std::stringstream s;
-  sheet.set_selection(new Select_And(new Select_Not(new Select_Contains(&sheet, "First_name", "Shaxx"), new Select_Or(new Select_Contains(&sheet, "Element", "Solar"), new Select_Contains(&sheet, "Element", "Void")));
+  sheet.set_selection(new Select_And(new Select_Not(new Select_Contains(&sheet, "First_name", "Shaxx")), new Select_Or(new Select_Contains(&sheet, "Element", "Solar"), new Select_Contains(&sheet, "Element", "Void"))));
   sheet.print_selection(s);
   EXPECT_EQ("Cayde Hunter Solar \nIkora Warlock Void \nOsiris Warlock Solar \n", s.str());
 } 
