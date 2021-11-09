@@ -29,7 +29,10 @@ public:
 
     virtual ~Select_Contains()
     {
-
+      if (parentPtr == nullptr)
+      {
+        erase(this);
+      }
     };
     
 
