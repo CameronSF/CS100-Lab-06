@@ -10,6 +10,38 @@ public:
 
     // Return true if the specified row should be selected.
     virtual bool select(const Spreadsheet* sheet, int row) const = 0;
+    
+    virtual std::vector<int> select() const = 0;
+
+    int get_sheet_size()
+    {
+      return sheet_size;
+    }
+    
+    void set_parent(Select* parent)
+    {
+      parentPtr = parent;
+    }
+
+    void erase(Select* current)
+    {
+      if (current != nullptr)
+      {
+        if (current->choice1 != nullptr)
+        {
+          erase(current->choice1);
+        }
+        if (current->choice2 != nullptr)
+        {
+          erase(current->choice2);
+        }
+
+        if (current->parentPtr != nullptr)
+        {
+          delete current;
+        }
+      }
+    }	
 };
 
 // A common type of criterion for selection is to perform a comparison based on
@@ -31,6 +63,10 @@ public:
 
     virtual bool select(const Spreadsheet* sheet, int row) const
     {
+	if (column == -1)
+	{
+	  return false;
+	}
         return select(sheet->cell_data(row, column));
     }
 
