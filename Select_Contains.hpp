@@ -48,10 +48,6 @@ public:
 
     bool select(const std::string& s) const   
     {
-      if (data == "")
-      {
-        return false;
-      }
       if(s.find(data) != std::string::npos) 
       {
         return true;

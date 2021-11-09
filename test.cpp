@@ -44,7 +44,7 @@ TEST(TestSelect_Contains, TestingEmpty)
   std::stringstream s;
   sheet.set_selection(new Select_Contains(&sheet, "Username", ""));
   sheet.print_selection(s);
-  EXPECT_EQ("", s.str());
+  EXPECT_EQ("HiveMind Teemo 15 \nSoul Ashe 20 \nTheJoker Twisted Fate 21 \nJokesOnYou Jinx 30 \nMindlessMachine Blitzcrank 21 \n", s.str());
 }
 
 TEST(TestSelect_Contains, TestingNoColumn)
@@ -129,6 +129,7 @@ TEST(TestSelect_Contains, TestingSelectFunction)
   Select* test = new Select_Contains(&sheet, "Username", "Joke");
   vector<int> test_vector = {2,3};
   EXPECT_EQ(test_vector, test->select());
+  delete test;
 }
 
 
@@ -179,6 +180,7 @@ TEST(TestSelect_And, TestingAndSelect)
 
   vector<int> test_vector = {4};
   EXPECT_EQ(test_vector, test->select());
+  delete test;
 }
 
 
@@ -213,6 +215,7 @@ TEST(TestSelect_Not, TestingNotSelect)
   Select* test = new Select_Not(new Select_Contains(&sheet, "Champion", "Teemo"));
   vector<int> test_vector = {1,2,3,4};
   EXPECT_EQ(test_vector, test->select());
+  delete test;
 }
 
 
@@ -282,6 +285,7 @@ TEST(TestSelect_Or, TestingOrSelect)
 
   vector<int> test_vector = {1, 2, 4};
   EXPECT_EQ(test_vector, test->select());
+  delete test;
 }
 
 
